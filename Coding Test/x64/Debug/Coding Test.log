@@ -1,2 +1,3 @@
 ﻿  Source.cpp
-  Coding Test.vcxproj -> E:\Coding Test\Coding Test\x64\Debug\Coding Test.exe
+MSVCRTD.lib(exe_main.obj) : error LNK2019: unresolved external symbol main referenced in function "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)
+E:\Coding Test\Coding Test\Today-Study\x64\Debug\Coding Test.exe : fatal error LNK1120: 1 unresolved externals
