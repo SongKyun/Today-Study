@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-int n, m, words[51];
+int n, m, words[51], D;
 string s;
 
 int count(int mask) {
