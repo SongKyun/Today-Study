@@ -1,3 +1,2 @@
 ﻿  Source.cpp
-E:\Coding Test\Coding Test\Today-Study\Coding Test\Source.cpp(10,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Coding Test.vcxproj -> E:\Coding Test\Coding Test\Today-Study\x64\Debug\Coding Test.exe
