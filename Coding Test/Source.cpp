@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-int n, m, result = 987654321; // 친구, 색상, 최소 질투심 초기값
+int n, m, result = 987654321; // 친구, 색상, 최소 질투심 초기
 int arr[300000]; // 각 색상의 형광펜 개수를 저장하는 배열
 
 // 특정 질투심으로 형광펜을 분배할 수 있는지 확인하는 함수
