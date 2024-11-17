@@ -1,41 +1,21 @@
-void ANetTPSCharacter::TakePistol()
+using namespace std;
+int n, a[1001], cnt[1001], ret;
+int main()
 {
-	if (bHasPistol == false)
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
 	{
-		TArray<AActor*> allActors;
-		TArray<AActor*> pistolActors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), allActors);
-		for (int i = 0; i < allActors.Num(); i++)
-		{
-			if (allActors[i]->GetActorLabel().Contains(TEXT("BP_Pistol")))
-			{
-				pistolActors.Add(allActors[i]);
-			}
-		}
-
-		for (AActor* pistol : pistolActors)
-		{
-			if (pistol->GetOwner() == nullptr)
-			{
-				float dist = FVector::Distance(pistol->GetActorLocation(), GetActorLocation());
-				if (dist < distanceToGun)
-				{
-					pistol->SetOwner(this)
-					bHasPistol = true;
-					ownedPistol = pistol;
-
-					AttackPistol(pistol);
-					break;
-				}
-			}
-		}
-		else
-		{
-			DetachPistol();
-
-			bHasPistol = false;
-			ownedPistol->SetOwner(nullptr);
-			ownedPistol = nullptr;
-		}
+		scanf("%d", a + i);
 	}
+	for (int i = 0; i < n; i++)
+	{
+		int maxValue = 0;
+		for (int j = 0; j < i; j++)
+		{
+			if (a[j] < a[i] && maxValue < cnt[j]) maxValue = cnt[j];
+		}
+		cnt[i] = maxValue + 1;
+		ret = max(ret, cnt[i]);
+	}
+	printf("%d\n", ret);
 }
