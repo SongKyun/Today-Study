@@ -18,7 +18,7 @@ UActorComponent를 부모로 상속받아 액터에 컴포넌트로 붙일 수 �
 <aside>
 💡
 
-컴포넌트 소유 액터
+컴포넌트 소유 액터 ddddddddd
 
 UPROPERTY()
 
