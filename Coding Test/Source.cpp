@@ -14,7 +14,7 @@
 ```cpp
 int go(int idx, int m, int pos) {
 	return max(go(idx + 1, m, pos), go(idx + 1, m - 1, pos == 1 ? 2 : 1))
-}
+}ddddddddddddddddddddddddddddd
 ```
 
 ![image.png](attachment:43a81e2f - 7b97 - 4b86 - a22c - 74f2fa95164b : image.png)
