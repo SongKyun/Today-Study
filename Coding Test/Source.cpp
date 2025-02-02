@@ -1,69 +1,63 @@
-﻿<aside>
+﻿기존 시퀀스를 복제하여 스켈레탈 메시만 바꿔주면 동일한 시퀀스가 실행된다
+
+![image.png](attachment:cfd50ec4 - 2764 - 4162 - 84cf - d6de8aef75a4 : image.png)
+
+총 6명의 캐릭터를 동일한 시퀀스로 생성
+
+carla
+
+claudia
+
+Eric
+
+Manuel
+
+Nathan
+
+Sophia
+
+![image.png](attachment:26ddb1b5 - 7e3f - 40cc - 993a - 8de12f6846f2 : image.png)
+
+![image.png](attachment:7464c26c - 56c3 - 4513 - 83e0 - 6df682b3c846 : image.png)
+
+구현해둔 enum 클래스를 통해 네트워크 적으로 플레이어 타입을 가져오는 로직이 구현되어 있다
+
+![image.png](attachment :226c2ee7 - 3dd6 - 4930 - 977b - 5af0daeeea5c : image.png)
+
+클래스 내부에서 EPlayerType 타입의 PlayerType 변수를 반환하는 Getter 함수
+
+강제 인라인화로 함수 비호출 최적화 및 const로 멤버 변경 방지
+
+왜 인라인을 강제해서 만들었는가 ? -짧고 간단한 함수이기 때문에 성능 최적화를 위해 - 블루 프린트에서 빠르게 접근해야해서 함수 호출 오버헤드가 누적될 수 있기 때문에 인라인화를 하면 오버헤드가 제거된다.
+
+
+Unreal Engine에서는 * *Getter 함수나 매우 짧은 유틸리티 함수 * *는 인라인화를 권장합니다.
+
+![image.png](attachment : 376a6861 - 2523 - 4a85 - 90a1 - 3e7a6670eebe : image.png)
+
+![image.png](attachment:3e6873cc - aba2 - 42bb - be31 - 6fc946eb17bd : image.png)
+
+![image.png](attachment:9fc5310f - 3c5a - 442f - 9ac4 - 38c63b12e9d2 : image.png)
+
+< aside >
 💡
 
-## 문제
+# 오류
 
-![image.png](attachment:fb799d81 - 74d1 - 4fc4 - a3ab - 5c1917bd6165 : image.png)
+LevelSequenceActor 변수가 None 인 상태에서 Set Sequence와 Play 노드가 실행되고 있다고 한다
 
-입력
+LevelSequenceActor 가 없다고 한다 …
 
-![image.png](attachment:bcc2e6fa - 7c54 - 45cc - 93d4 - 79638d71e7e1 : image.png)
+시작 시에 할당해주는 블루프린트를 작성
 
-### 완전 탐색으로 풀이 시
+![image.png](attachment:0ad8f979 - 6b11 - 44bd - 8cea - a07c98970b35 : image.png)
 
-```cpp
-int go(int idx, int m, int pos) {
-	return max(go(idx + 1, m, pos), go(idx + 1, m - 1, pos == 1 ? 2 : 1))
-}ddddddddddddddddddddddddddddd
-```
+Outliner에서 해당 BP 액터를 검색해서 레벨 시퀀스 액터가 할당 되었는지 확인이 가능하다 또는 할당도 해줄 수 있다
 
-![image.png](attachment:43a81e2f - 7b97 - 4b86 - a22c - 74f2fa95164b : image.png)
-
-![image.png](attachment:63d2b8dc - 0a9f - 445a - 8149 - b8210fc23b8e : image.png)
-
-### 정답 코드
-
-![image.png](attachment:437d64e3 - b139 - 4cb1 - 9c2f - 21b23a2bf9b1 : image.png)
-
-초기에 - 1 로 배열을 초기화 했음
-
-![image.png](attachment:755a6098 - 8212 - 42aa - a268 - 9caa8771562a : image.png)
-
-cnt = M인데 음수가 나올 경우 불가능한 경우의 수기 때문에 엄청 큰 음수를 리턴해서 제외시켜 버린다는 기법이다
-
-###  * *기저 사례 * *
-
-int(idx == n) return 0;
-
-###  * *메모이제이션 * *
-
-int& ret = dp[idx][tree][cnt]; -**참조 * ***ret을 수정하면 dp에도 반영되게 간단한 코드를 사용함 * *
-
-if (ret ≠ - 1) return ret - **초깃값 - 1 과 다르다면 계산된 값이 생긴 것이므로 ret 으로 반환해라 * *
-
-![image.png](attachment:e1e05587 - e388 - 4847 - aaf2 - 816c174e7f39 : image.png)
-
-XOR 연산자로 토글 기능 같이 사용할 수 있다
-
-![image.png](attachment:5dda09af - 2897 - 4648 - bec5 - 996cab62f40e : image.png)
+![image.png](attachment:da12b84b - 8aba - 4c5b - bc8f - 507b922547c5 : image.png)
 
 < / aside >
 
-<aside>
-💡
+캐릭터별로 시퀀스가 실행되는 모습을 볼 수 있다 !!
 
-## DP의 구조
-
-DP는 * *초기화, 기저사례, 메모이제이션, 로직** 으로 구성되어 있습니다
-
-![image.png](attachment:947f7cb7 - 5097 - 4999 - 94ca - f48c9906894c : image.png)
-
-![image.png](attachment:2b840794 - 5eac - 4840 - a92e - 6d118053a434 : image.png)
-
-![image.png](attachment:b30e7ad9 - e77e - 4811 - 9ff0 - 9cbb1d631d49 : image.png)
-
-![image.png](attachment:3e15a315 - 68c4 - 46d9 - b2db - 86ba44ef55c5 : image.png)
-
-![image.png](attachment:da0671d2 - 596c - 40aa - 93f6 - 3dd85c45f421 : image.png)
-
-< / aside >
+![image.png](attachment:ed815e6a - 0467 - 4865 - bcb4 - 1b46337dd90d : image.png)
