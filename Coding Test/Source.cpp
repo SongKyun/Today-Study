@@ -60,4 +60,4 @@ Outliner에서 해당 BP 액터를 검색해서 레벨 시퀀스 액터가 할�
 
 캐릭터별로 시퀀스가 실행되는 모습을 볼 수 있다 !!
 
-![image.png](attachment:ed815e6a - 0467 - 4865 - bcb4 - 1b46337dd90d : imqwdqwdqwdqwdage.png)sdsdsd
+![image.png](attachment:ed815e6a - 0467 - 4865 - bcb4 - 1b46337dd90d :
