@@ -20,7 +20,7 @@ Sophia
 
 ![image.png](attachment:7464c26c - 56c3 - 4513 - 83e0 - 6df682b3c846 : image.png)
 
-구현해둔 enum 클래스를 통해 네트워크 적으로 플레이어 타입을 가져오는 로직이 구현되어 있다
+구현해둔 enum 클래스를 통해 네트워크 적으로 플레이어 타입을 가져오는 로직이 구현되어 있다.
 
 ![image.png](attachment :226c2ee7 - 3dd6 - 4930 - 977b - 5af0daeeea5c : image.png)
 
