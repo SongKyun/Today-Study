@@ -19,7 +19,7 @@ void update(vector<long long>& tree, int i, long long diff) {
     while (i < tree.size()) {  // 인덱스가 트리 크기보다 작을 때까지 반복
         tree[i] += diff;       // 현재 위치에 차이값을 더함
         i += (i & -i);         // 마지막 1의 비트를 추가하면서 이동 (자식 노드로 이동)
-    }
+    }''''
 }
 
 int main() {
@@ -48,8 +48,4 @@ int main() {
         else {  // 구간 합 질의 연산
             scanf("%d %d", &t2, &t3); // t2~t3 구간의 합 구하기
             printf("%lld\n", sum(tree, t3) - sum(tree, t2 - 1)); // 펜윅 트리를 이용해 구간 합 출력
-        }
-    }
 
-    return 0; // 프로그램 종료
-}
