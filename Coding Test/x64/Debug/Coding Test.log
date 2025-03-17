@@ -1,5 +1,4 @@
 ﻿D:\Game Engine\Visual Studio 2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Coding Test.vcxproj).  This can lead to incorrect clean and rebuild behavior.
 cl : command line  warning D9025: overriding '/std:c++17' with '/std:c++latest'
   Source.cpp
-E:\Coding Test\Coding Test\Today-Study\Coding Test\Source.cpp(6,17): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   Coding Test.vcxproj -> E:\Coding Test\Coding Test\Today-Study\x64\Debug\Today Study.exe
