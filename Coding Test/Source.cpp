@@ -1,45 +1,58 @@
-﻿// 헤더 파일 포함 및 기본 설정
-#include <cstdio>
-#include <algorithm>
-#include <iostream>
-
-// 전역 변수 선언 및 초기화
+﻿#include <bits/stdc++.h>
 using namespace std;
 
-int n, m, a, b, c, dist[104][104];
-// n 정점 개수, m 간선 개수, a b c 입력받을 간선 정보(시작,도착,가중치), dist 최단 거리 정보 저장 2차원 배열
-
-const int INF = 987654321; // 초기값 큰 수
+long long t, n, m, a, b, c, dist[1004], INF = 987654321;
 
 int main() {
-	// 입출력 속도 최적화
-	ios_base::sync_with_stdio(false); // cin, cout 실행 속도 향상
-	cin.tie(NULL); // cin과 cout 묶음 해제로 실행 속도 최적화
-	cout.tie(NULL); // 출력 버퍼링 최적화
 
-	// 입력 받기 & 거리 배열 초기화
-	cin >> n >> m; // 정점 개수, 간선 개수 입력
-	fill(&dist[0][0], &dist[0][0] + 104 * 104, INF); // 모든 거리 배열 값 초기화
+	t = 1; // 테스트 케이스 개수 1로 고정
 
-	// 간선 입력 & 초기 거리 설정
-	for (int i = 0; i < m; i++) {
-		cin >> a >> b >> c;
-		a--; b--; // 입력이 1-based 인덱스이므로, 배열에서 사용하기 위해 0-based로 변환
-		dist[a][b] = min(dist[a][b], c); // 같은 a->b 경로가 여러 개 존재할 수 있으므로 가장 작은 가중치 저장
-	}
+	for (int T = 1; T <= t; T++) { // 단일 테스트 케이스 실행
+		cin >> n >> m; // 노드 개수, 간선 개수 입력
 
-	// 플로이드-워셜 알고리즘 실행
-	for (int k = 0; k < n; k++) // 중간 노드 k (거쳐 가는 노드)
-		for (int i = 0; i < n; i++) // 출발 노드 i
-			for (int j = 0; j < n; j++) // 도착 노드 j
-				// 현재 i->j 거리와 i->k->j 거리 중 더 짧은 거리로 업데이트
-				dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+		fill(dist, dist + n + 1, INF); // 모든 거리 값을 큰 수로 초기화
 
-	// 결과 출력
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++)
-			if (i == j) printf("0 "); // 자기 자신으로 가는 경로는 0
-			else printf("%d ", dist[i][j] == INF ? 0 : dist[i][j]); // 도달할 수 없으면 0 출력
-		puts(""); // 줄바꿈
+		vector<pair<int, int>> adj[1004]; // 인접 리스트 (노드 번호, 가중치)
+
+		// 간선 정보 입력
+		for (int i = 0; i < m; i++) {
+			cin >> a >> b >> c;
+			adj[a - 1].push_back({ b - 1, c }); // a - 1 에서 b - 1 로 가는 가중치 c의 간선 추가
+			// 입력값은 1부터인데 배열은 0부터 시작을 위해 빼준다
+		}
+
+		dist[0] = 0; // 시작점 노드 거리 값 0 설정
+		queue<int> q; // 음수 사이클 여부를 체크하기 위한 큐
+
+		// 벨만-포드 알고리즘 수행 - 모든 간선을 최대 (노드 개수 - 1)번 확인하면 최단 거리가 확정됨
+		for (int i = 0; i < n; i++) { // 전체 노드 수만큼 반복 (최대 n-1번 수행)
+			for (int here = 0; here < n; here++) { // 현재 노드 here에서 갈 수 있는 간선을 확인
+				for (auto there : adj[here]) { // 연결된 노드 탐색 adj[here] : here에서 연결된 모든 간선을 저장한 벡터
+					// there은 {도착 노드, 가중치} 형태의 pair<int, int> 타입
+					int d = there.second; // 현재 간선 가중치(거리)
+					int to = there.first; // 현재 간선 도착 노드
+
+					// 현재 노드를 거쳐서 더 짧은 경로가 발견되면 갱신
+					// here 가 INF 면 해당 노드는 아직 방문되지 않은 상태로 갱신하지 않음
+					// && here 노드를 거쳐 to 노드로 가는 가중치 d 가 기존 도착 노드 dist[to]보다 작으면 갱신함
+					// 즉 더 짧은 경로를 찾았을 경우 최단 거리 배열을 업데이트 함
+					if (dist[here] != INF && dist[here] + d < dist[to]) {
+						// n-1번 반복하면 최단 거리 확정되어야함
+						if (i == n - 1) q.push(to); // 만약 n번째(n-1) 반복에서도 값이 갱신되면 현재 음수 사이클 발생 노드 기록
+						dist[to] = dist[here] + d; // 최단 거리 배열을 업데이트 함
+					}
+				}
+			}
+		}
+
+
+		// 음수 사이클 존재 여부 판단
+		if (q.size()) cout << -1 << "\n"; // 음수 사이클 존재 시 -1 출력
+		else {
+			for (int i = 1; i < n; i++)
+				cout << (dist[i] == INF ? -1 : dist[i]) << "\n";
+			// 시작점에서 i번째 노드까지 최단 거리 출력
+			// 도달할 수 없는 경우 -1 출력
+		}
 	}
 }
