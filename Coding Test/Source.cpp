@@ -1,58 +1,79 @@
-﻿#include <bits/stdc++.h>
+﻿#include <iostream>
+#include <string>
+#include <algorithm>
+
 using namespace std;
 
-long long t, n, m, a, b, c, dist[1004], INF = 987654321;
+// 문자열 S
+string S;
 
-int main() {
+int main()
+{
+	// cin >> S; // 공백을 기준으로 한 단어 입력 , cin 은 공백을 만나면 입력이 끝남
 
-	t = 1; // 테스트 케이스 개수 1로 고정
+	// 문자열 입력
+	getline(cin, S); // 공백 포함 입력 받기 getline
 
-	for (int T = 1; T <= t; T++) { // 단일 테스트 케이스 실행
-		cin >> n >> m; // 노드 개수, 간선 개수 입력
+	string word; // 뒤집을 단어 저장 string 타입 변수
+	string result; // 최종 출력 결과 저장 string 타입 변수
+	bool inTag = false;
 
-		fill(dist, dist + n + 1, INF); // 모든 거리 값을 큰 수로 초기화
+	for (size_t i = 0; i < S.size(); i++)
+	{
+		// 태그 시작 만약 < 일 때
+		if (S[i] == '<')
+		{
+			if (!word.empty()) // 워드가 비어있지 않을 때?? : < 전에 현재까지 단어가 쌓여 있다면
+			{
+				reverse(word.begin(), word.end());	// 단어 뒤집기
+				result += word;						// 결과 문자열에 추가
+				word.clear();						// 단어 버퍼 초기화
+			}
 
-		vector<pair<int, int>> adj[1004]; // 인접 리스트 (노드 번호, 가중치)
+			// 태그 안에 있는지 체크할 bool 변수 필요
+			inTag = true;
 
-		// 간선 정보 입력
-		for (int i = 0; i < m; i++) {
-			cin >> a >> b >> c;
-			adj[a - 1].push_back({ b - 1, c }); // a - 1 에서 b - 1 로 가는 가중치 c의 간선 추가
-			// 입력값은 1부터인데 배열은 0부터 시작을 위해 빼준다
+			// 결과에 추가
+			result += S[i];
 		}
-
-		dist[0] = 0; // 시작점 노드 거리 값 0 설정
-		queue<int> q; // 음수 사이클 여부를 체크하기 위한 큐
-
-		// 벨만-포드 알고리즘 수행 - 모든 간선을 최대 (노드 개수 - 1)번 확인하면 최단 거리가 확정됨
-		for (int i = 0; i < n; i++) { // 전체 노드 수만큼 반복 (최대 n-1번 수행)
-			for (int here = 0; here < n; here++) { // 현재 노드 here에서 갈 수 있는 간선을 확인
-				for (auto there : adj[here]) { // 연결된 노드 탐색 adj[here] : here에서 연결된 모든 간선을 저장한 벡터
-					// there은 {도착 노드, 가중치} 형태의 pair<int, int> 타입
-					int d = there.second; // 현재 간선 가중치(거리)
-					int to = there.first; // 현재 간선 도착 노드
-
-					// 현재 노드를 거쳐서 더 짧은 경로가 발견되면 갱신
-					// here 가 INF 면 해당 노드는 아직 방문되지 않은 상태로 갱신하지 않음
-					// && here 노드를 거쳐 to 노드로 가는 가중치 d 가 기존 도착 노드 dist[to]보다 작으면 갱신함
-					// 즉 더 짧은 경로를 찾았을 경우 최단 거리 배열을 업데이트 함
-					if (dist[here] != INF && dist[here] + d < dist[to]) {
-						// n-1번 반복하면 최단 거리 확정되어야함
-						if (i == n - 1) q.push(to); // 만약 n번째(n-1) 반복에서도 값이 갱신되면 현재 음수 사이클 발생 노드 기록
-						dist[to] = dist[here] + d; // 최단 거리 배열을 업데이트 함
-					}
-				}
+		// 태그 종료 > 시
+		else if (S[i] == '>')
+		{
+			inTag = false;
+			result += S[i];
+		}
+		// 태그 내부이면 그대로 추가
+		else if (inTag)
+		{
+			result += S[i];
+		}
+		// 태그 바깥 (단어, 공백 처리)
+		else
+		{
+			// 공백을 만났을 경우
+			if (S[i] == ' ')
+			{
+				reverse(word.begin(), word.end()); // 단어 뒤집기
+				result += word + " "; // 공백 추가
+				word.clear();
+			}
+			// 단어에 속하는 문자
+			else
+			{
+				word += S[i];
 			}
 		}
-
-
-		// 음수 사이클 존재 여부 판단
-		if (q.size()) cout << -1 << "\n"; // 음수 사이클 존재 시 -1 출력
-		else {
-			for (int i = 1; i < n; i++)
-				cout << (dist[i] == INF ? -1 : dist[i]) << "\n";
-			// 시작점에서 i번째 노드까지 최단 거리 출력
-			// 도달할 수 없는 경우 -1 출력
-		}
 	}
+	// 공백 , < 태그를 만나야 뒤집혀서 결과에 추가됨
+	// 하지만 문자열의 끝에서는 공백이나 태그가 없어 자동으로 뒤집어 추가되지 않음
+	// 따라서 반복문 종료 후 마지막 문자만 추가 처리 해야함
+	if (!word.empty())
+	{
+		reverse(word.begin(), word.end());
+		result += word;
+	}
+
+	cout << result << endl;
+
+	return 0;
 }
