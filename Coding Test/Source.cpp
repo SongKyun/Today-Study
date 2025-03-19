@@ -1,78 +1,105 @@
-﻿#include <iostream>
-#include <string>
-#include <algorithm>
+﻿//#include <iostream>
+//#include <string>
+//#include <algorithm>
+//
+//using namespace std;
+//
+//int main()
+//{
+//	string S;
+//	getline(cin, S);
+//
+//	string word;
+//	string result;
+//	bool inTag = false;
+//
+//	for (size_t i = 0; i < S.size(); i++)
+//	{
+//		if (S[i] == '<')
+//		{
+//			if (!word.empty())
+//			{
+//				reverse(word.begin(), word.end());
+//				result += word;
+//				word.clear();
+//			}
+//
+//			inTag = true;
+//			result += S[i];
+//		}
+//		else if(S[i] == '>')
+//		{
+//			inTag = false;
+//			result += S[i];
+//		}
+//		else if (inTag)
+//		{
+//			result += S[i];
+//		}
+//		else
+//		{
+//			if (S[i] == ' ')
+//			{
+//				reverse(word.begin(), word.end());
+//				result += word;
+//				word.clear();
+//			}
+//			else
+//			{
+//				word += S[i];
+//			}
+//		}
+//	}
+//
+//	if (!word.empty())
+//	{
+//		reverse(word.begin(), word.end());
+//		result += word;
+//	}
+//
+//	cout << result << endl;
+//
+//	return 0;
+//}
 
+#include <iostream>
+#include <vector>
 using namespace std;
 
-// 문자열 S
-string S;
+
+int binaryCheck(int N)
+{
+	const int MOD = 15746;
+
+	vector<int> dp(N + 1, 0); // dp 배열 0으로 초기화
+	// 왜 N + 1 이지??
+	// N = 4 일 경우, dp 배열은 길이가 5인 배열로, 인덱스 0부터 4까지 존재해서
+
+	// 초기값 설정
+	dp[0] = 1; // 길이가 0인 수열 1가지 (빈 수열)
+	dp[1] = 1; // 길이가 1인 수열 1가지 (1)
+
+	if (N >= 2)
+	{
+		dp[2] = 2; // 길이가 2인 수열은 2가지 (00, 11)
+	}
+
+	// 점화식에 따라 dp 배열을 채워나감
+	// 초깃값은 dp[3]을 구하려고 dp[2]와 dp[1]을 사용해야 하므로 3부터 시작함
+	for (int i = 3; i <= N; ++i)
+	{
+		dp[i] = (dp[i - 1] + dp[i - 2]) % MOD; // 이전 두 길이의 경우를 더함 (피보나치)
+	}
+	
+	return dp[N];
+}
 
 int main()
 {
-	// cin >> S; // 공백을 기준으로 한 단어 입력 , cin 은 공백을 만나면 입력이 끝남
+	int N;
+	cin >> N;
 
-	// 문자열 입력
-	getline(cin, S); // 공백 포함 입력 받기 getline
-
-	string word; // 뒤집을 단어 저장 string 타입 변수
-	string result; // 최종 출력 결과 저장 string 타입 변수
-	bool inTag = false;
-
-	for (size_t i = 0; i < S.size(); i++)
-	{
-		// 태그 시작 만약 < 일 때
-		if (S[i] == '<')
-		{
-			if (!word.empty()) // 워드가 비어있지 않을 때?? : < 전에 현재까지 단어가 쌓여 있다면
-			{
-				reverse(word.begin(), word.end());	// 단어 뒤집기
-				result += word;						// 결과 문자열에 추가
-				word.clear();						// 단어 버퍼 초기화
-			}
-
-			// 태그 안에 있는지 체크할 bool 변수 필요
-			inTag = true;
-
-			// 결과에 추가
-			result += S[i];
-		}
-		// 태그 종료 > 시
-		else if (S[i] == '>')
-		{
-			inTag = false;
-			result += S[i];
-		}
-		// 태그 내부이면 그대로 추가
-		else if (inTag)
-		{
-			result += S[i];
-		}
-		// 태그 바깥 (단어, 공백 처리)
-		else
-		{
-			// 공백을 만났을 경우
-			if (S[i] == ' ')
-			{
-				reverse(word.begin(), word.end()); // 단어 뒤집기
-				result += word + " "; // 공백 추가
-				word.clear();
-			}
-			// 단어에 속하는 문자
-			else
-			{
-				word += S[i];
-			}
-		}
-	}
-	// 공백 , < 태그를 만나야 뒤집혀서 결과에 추가됨
-	// 하지만 문자열의 끝에서는 공백이나 태그가 없어 자동으로 뒤집어 추가되지 않음
-	// 따라서 반복문 종료 후 마지막 문자만 추가 처리 해야함
-	if (!word.empty())
-	{
-		reverse(word.begin(), word.end());
-		result += word;
-	}
-
+	int result = binaryCheck(N);
 	cout << result << endl;
 
 	return 0;
