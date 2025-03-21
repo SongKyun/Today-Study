@@ -92,7 +92,7 @@ int binaryCheck(int N)
 	}
 	
 	return dp[N];
-}
+}ddddd
 
 int main()
 {
