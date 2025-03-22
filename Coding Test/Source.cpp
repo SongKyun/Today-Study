@@ -66,7 +66,7 @@
 #include <vector>
 using namespace std;
 
-
+ddddd
 int binaryCheck(int N)
 {
 	const int MOD = 15746;
