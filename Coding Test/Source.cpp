@@ -1,107 +1,155 @@
 ﻿//#include <iostream>
-//#include <string>
-//#include <algorithm>
-//
+//#include <vector>
 //using namespace std;
+//
+//int binaryCheck(int N)
+//{
+//	const int MOD = 15746;
+//
+//	vector<int> dp(N + 1, 0);
+//
+//	dp[0] = 1;
+//	dp[1] = 1;
+//
+//	if (N >= 2)
+//	{
+//		dp[2] = 2;
+//	}
+//
+//	for (int i = 3; i <= N; ++i)
+//	{
+//		dp[i] = (dp[i - 1] + dp[i - 2]) % MOD;
+//	}
+//	return dp[N];
+//}
 //
 //int main()
 //{
-//	string S;
-//	getline(cin, S);
+//	int N;
+//	cin >> N;
 //
-//	string word;
-//	string result;
-//	bool inTag = false;
-//
-//	for (size_t i = 0; i < S.size(); i++)
-//	{
-//		if (S[i] == '<')
-//		{
-//			if (!word.empty())
-//			{
-//				reverse(word.begin(), word.end());
-//				result += word;
-//				word.clear();
-//			}
-//
-//			inTag = true;
-//			result += S[i];
-//		}
-//		else if(S[i] == '>')
-//		{
-//			inTag = false;
-//			result += S[i];
-//		}
-//		else if (inTag)
-//		{
-//			result += S[i];
-//		}
-//		else
-//		{
-//			if (S[i] == ' ')
-//			{
-//				reverse(word.begin(), word.end());
-//				result += word;
-//				word.clear();
-//			}
-//			else
-//			{
-//				word += S[i];
-//			}
-//		}
-//	}
-//
-//	if (!word.empty())
-//	{
-//		reverse(word.begin(), word.end());
-//		result += word;
-//	}
-//
+//	int result = binaryCheck(N);
 //	cout << result << endl;
 //
 //	return 0;
 //}
 
 #include <iostream>
-#include <vector>
+
 using namespace std;
 
-ddddd
-int binaryCheck(int N)
+// 노드 구조체
+struct Node
 {
-	const int MOD = 15746;
+	char data;		// 노드에 저장되는 문자
+	Node* left;		// 왼쪽 자식 노드 포인터
+	Node* right;	// 오른쪽 자식 노드 포인터
 
-	vector<int> dp(N + 1, 0); // dp 배열 0으로 초기화
-	// 왜 N + 1 이지??
-	// N = 4 일 경우, dp 배열은 길이가 5인 배열로, 인덱스 0부터 4까지 존재해서
-
-	// 초기값 설정
-	dp[0] = 1; // 길이가 0인 수열 1가지 (빈 수열)
-	dp[1] = 1; // 길이가 1인 수열 1가지 (1)
-
-	if (N >= 2)
+	// 생성자 : 값을 받아서 새로운 노드를 생성
+	Node(char parent)
 	{
-		dp[2] = 2; // 길이가 2인 수열은 2가지 (00, 11)
+		data = parent;
+		left = right = nullptr;
+	}
+};
+
+// 삽입 함수
+Node* insert(Node* root, char parent, char left, char right)
+{
+	// 트리가 비어 있다면 새로운 노드를 생성하여 반환
+	if (root == nullptr)
+	{
+		return new Node(parent);
 	}
 
-	// 점화식에 따라 dp 배열을 채워나감
-	// 초깃값은 dp[3]을 구하려고 dp[2]와 dp[1]을 사용해야 하므로 3부터 시작함
-	for (int i = 3; i <= N; ++i)
+	// 부모 노드를 찾고 자식 연결
+	if (root->data == parent)
 	{
-		dp[i] = (dp[i - 1] + dp[i - 2]) % MOD; // 이전 두 길이의 경우를 더함 (피보나치)
+		// 왼쪽 자식 연결
+		if (left != '.')
+		{
+			root->left = new Node(left);
+		}
+
+		if (right != '.')
+		{
+			root->right = new Node(right);
+		}
 	}
-	
-	return dp[N];
-}ddddddddd
+	// 위에서부터 부모 노드를 찾을 때까지 왼쪽, 오른쪽 자식 노드를 재귀적으로 탐색
+	else
+	{
+		if (root->left) insert(root->left, parent, left, right);
+		if (root->right) insert(root->right, parent, left, right);
+	}
+
+	return root;
+}
+
+// xx 순회 xxorder traversal
+
+// 전위 순회 Pre
+// 루트 -> 왼쪽 -> 오른쪽
+void preorder(Node* root)
+{
+	if (root)
+	{
+		cout << root->data;		// 현재 노드 출력
+		preorder(root->left);	// 왼쪽
+		preorder(root->right);	// 오른쪽
+	}
+}
+
+// 중위 순회 In
+// 왼쪽 -> 루트 -> 오른쪽
+void inorder(Node* root)
+{
+	if (root) // 재귀의 기저사례 root == nullptr이면 종료
+	{
+		// 함수 재호출(재귀(스택) : 쌓였다가 기저 조건 만나면 하나씩 복귀) 
+		inorder(root->left);	// 왼쪽
+		cout << root->data;		// 현재 노드 출력
+		inorder(root->right);	// 오른쪽
+	}
+}
+
+// 후위 순회 Post
+// 왼쪽 -> 오른쪽 -> 루트
+void postorder(Node* root)
+{
+	if (root)
+	{
+		postorder(root->left);
+		postorder(root->right);
+		cout << root->data;
+	}
+}
 
 int main()
 {
+	Node* root = nullptr; // 루트 노드 초기화
+
 	int N;
 	cin >> N;
 
-	int result = binaryCheck(N);
-	cout << result << endl;
+	char parent, left, right;
+
+	for (int i = 0; i < N; i++)
+	{
+		cin >> parent >> left >> right;
+		if (root == nullptr)
+		{
+			root = new Node(parent); // 루트 노드 생성
+		}
+		root = insert(root, parent, left, right);
+	}
+
+	// 순회 결과 출력
+	preorder(root);
+	cout << endl;
+	inorder(root);
+	cout << endl;
+	postorder(root);
 
 	return 0;
-
 }
